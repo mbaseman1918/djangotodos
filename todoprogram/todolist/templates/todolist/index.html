@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>To Do Django</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'todolist/css/style.css'%}"/>
+  </head>
+  <body>
+
+      Add a To Do:
+      <form action="{% url 'todos:add' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="todo_text"/>
+        <button type="submit">+</button>
+      </form>
+      <ul>
+        {% for todo_item in todos %}
+        <li>
+          <p {% if todo_item.completed %}class="completed"{% endif %}>{{ todo_item.todo_text }}</p>
+          <!-- <p>{{ todo_item.completed }}</p> -->
+          <p>{{ todo_item.created_date }}</p>
+          <form action="{% url 'todos:done' todo_item.pk %}" method="GET">
+            {% csrf_token %}
+            <button type="submit">done</button>
+          </form>
+          <a href="{% url 'todos:remove' pk=todo_item.pk %}" method="GET">
+            <button type="submit">-</button>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </body>
+  </html>
